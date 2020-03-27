@@ -1,5 +1,3 @@
-// Test comment
-
 #include "password_class.h"
 #include <Vector>
 #include <sstream>
