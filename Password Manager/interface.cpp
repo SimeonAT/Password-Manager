@@ -7,21 +7,6 @@
    and all other external files are utilized here. */
 // FORMAT: <password name> <username> <password>
 
-void buffer() {
-	/* User reads info, presses ENTER key before console clears screen. */
-	cout << "Press ENTER to continue. " << endl;
-	string buffer;
-	getline(cin, buffer);
-}
-
-void bufferNoPrint() {
-	/* User reads info, presses ENTER key before console clears screen. 
-	The only difference between buffer() is that it doesn't have cout statement. */
-	string buffer;
-	getline(cin, buffer);
-}
-
-
 int main() {
 	vector<Password> passwordLibrary; // holds passwords for duration of program 
 
