@@ -112,7 +112,7 @@ int main() {
 
 			/* If a Master Password is added or changed, write the new Master Password 
 			onto master_password.txt*/
-			file.open("master_password.txt");
+			file.open("master_password.txt", ios::out | ios::trunc);
 			file << master_password << endl;
 			file.close();
 
