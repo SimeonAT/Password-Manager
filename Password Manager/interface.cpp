@@ -3,7 +3,7 @@
 #include <sstream>
 #include <algorithm>
 
-/*  is the central hub of the program. Manages user interface,
+/*interface.cpp is the central hub of the program. Manages user interface,
    and all other external files are utilized here. */
 // FORMAT: <password name> <username> <password>
 
