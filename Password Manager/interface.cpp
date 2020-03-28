@@ -9,31 +9,12 @@
 
 int main() {
 	vector<Password> passwordLibrary; // holds passwords for duration of program 
-
-	/* - Read passwords from passwords.txt
-	   - Loop through each line 
-	   - Use stringstream to separate the variables each line, 
-	     and add them to a new Password object */
 	fstream file;
-	file.open("passwords.txt");
-	
-	string name, username, passcode;
-	if (!file) { cout << "ERROR: Can't Open File" << endl; return -1; } 
-	
-	string line;
-	while (getline(file, line)) {
-		/* If there are passwords in file, the while loop will execute */
-		stringstream splitter(line);
-		splitter >> name >> username >> passcode;
-		passwordLibrary.push_back(Password(passcode, name, username));
-	}
-
-	file.close(); // done reading 
-
 
 	/* Read master_password.txt. If there is a password in the file, ask the user to enter
 	the master password before emptying. After ten tries, CLEAR EVERYTHING IN passwords.txt*/
 	file.open("master_password.txt");
+	string line;
 	file >> line;
 	string master_password = line;
 	file.close(); // done reading 
@@ -50,12 +31,12 @@ int main() {
 			if (input == master_password)
 				break;
 
-			if (failed_tries >= 10) {
+			if (failed_tries >= 9) {
 				// delete the whole password library, then break
 				file.open("passwords.txt", ios::out | ios::trunc);
 				file.close();
 
-				cout << "The whole password library has been deleted. " << endl;
+				cout << "\nThe whole password library has been deleted. " << endl;
 				bufferNoPrint(); buffer();
 				break;
 			}
@@ -68,6 +49,25 @@ int main() {
 		}
 	}
 	system("CLS");
+
+
+	/* - Read passwords from passwords.txt
+   - Loop through each line
+   - Use stringstream to separate the variables each line,
+	 and add them to a new Password object */
+	file.open("passwords.txt");
+	
+	string name, username, passcode;
+	if (!file) { cout << "ERROR: Can't Open File" << endl; return -1; } 
+	
+	while (getline(file, line)) {
+		/* If there are passwords in file, the while loop will execute */
+		stringstream splitter(line);
+		splitter >> name >> username >> passcode;
+		passwordLibrary.push_back(Password(passcode, name, username));
+	}
+
+	file.close(); // done reading 
 
 	/* THE INTERFACE LOOP */
 	while (true) {
