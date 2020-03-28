@@ -30,6 +30,10 @@ int main() {
 
 	file.close(); // done reading 
 
+	/* Read master_password.txt. If there is a password in the file, ask the user to enter
+	the master password before emptying. After ten tries, CLEAR EVERYTHING IN passwords.txt*/
+
+
 
 	/* THE INTERFACE LOOP */
 	while (true) {
@@ -38,7 +42,7 @@ int main() {
 		cout << "Type EDIT to edit a password." << endl;
 		cout << "Type CLEAR to clear your password library." << endl;
 		cout << "Type VIEW to view your password library." << endl;
-		cout << "Type PASSWORD to set up as password for the password manager." << "\n\n" << endl;
+		cout << "Type PASSWORD to set up a master password for the password manager." << "\n\n" << endl;
 		cout << "Be sure to type EXIT before leaving in order " << endl;
 		cout << "to make sure that your passwords are saved." << endl;
 		cout << "---------------------------------------" << endl;
@@ -71,6 +75,10 @@ int main() {
 				}
 			}
 			file.close();
+
+			/* If a Master Password is added or changed, write the new Master Password 
+			onto master_password.txt*/
+
 			return 0; 
 		}
 
@@ -193,6 +201,11 @@ int main() {
 			pPassword = NULL;
 			delete pPassword;
 			bufferNoPrint(); buffer();
+		}
+
+		else if (user_input == "PASSWORD") {
+			// Set up a master password 
+
 		}
 		
 		else { cout << "Please enter valid input." << endl; bufferNoPrint(); buffer(); }
