@@ -37,7 +37,8 @@ int main() {
 		cout << "Type ADD to add a password." << endl;
 		cout << "Type EDIT to edit a password." << endl;
 		cout << "Type CLEAR to clear your password library." << endl;
-		cout << "Type VIEW to view your password library." << "\n\n";
+		cout << "Type VIEW to view your password library." << endl;
+		cout << "Type PASSWORD to set up as password for the password manager." << "\n\n" << endl;
 		cout << "Be sure to type EXIT before leaving in order " << endl;
 		cout << "to make sure that your passwords are saved." << endl;
 		cout << "---------------------------------------" << endl;
@@ -117,6 +118,64 @@ int main() {
 				cout << "ERROR: invalid input. " << endl;
 			}
 			buffer();
+		}
+
+		else if (user_input == "EDIT") {
+			cout << "Type the name of the password that you want to edit. \n\n";
+			string passwordName; 
+			cin >> passwordName;
+
+			// Find password_name in passwordLibrary
+			bool found = false;
+			Password *pPassword = NULL; // Holds the address of the password we want to change 
+			for (int i = 0; i < passwordLibrary.size(); i++) {
+				if (passwordName == passwordLibrary[i].get_name()) {
+					found = true;
+					pPassword = &passwordLibrary[i];
+					cout << *pPassword << endl;
+				}
+			}
+			
+			if (found == true){
+				cout << "What do you want to change?" << endl;
+				cout << "Enter NAME to change the name of the password. " << endl;
+				cout << "Enter USERNAME to change the username of the password." << endl;
+				cout << "Enter PASSWORD to change the actual password itself. \n\n";
+				string whatToChange;
+				cin >> whatToChange;
+				transform(whatToChange.begin(), whatToChange.end(), whatToChange.begin(), ::toupper);
+
+				if (whatToChange == "NAME") {
+					cout << "Please enter the new NAME for the password: ";
+					string changeName;
+					cin >> changeName;
+					pPassword->set_name(changeName);
+
+				}
+				else if (whatToChange == "USERNAME") {
+					cout << "Please enter the new USERNAME for the password: ";
+					string changeUserName;
+					cin >> changeUserName;
+					pPassword->set_username(changeUserName);
+
+				}
+				else if (whatToChange == "PASSWORD") {
+					cout << "Please enter the new PASSWORD: ";
+					string changePassword;
+					cin >> changePassword;
+					pPassword->set_password(changePassword);
+				}
+				else {
+					cout << "Sorry. I didn't understand the input you typed. " << endl;
+				}
+
+			}
+			else {
+				cout << "Sorry.\n A password with that password name cannot be found." << endl;
+			}
+			pPassword = NULL;
+			delete pPassword;
+			bufferNoPrint(); buffer();
 		}
 		
 		else { cout << "Please enter valid input." << endl; bufferNoPrint(); buffer(); }
