@@ -32,6 +32,10 @@ int main() {
 
 	/* Read master_password.txt. If there is a password in the file, ask the user to enter
 	the master password before emptying. After ten tries, CLEAR EVERYTHING IN passwords.txt*/
+	file.open("master_password.txt");
+	file >> line;
+	string master_password = line;
+	cout << "master_password: " << line << endl;
 
 
 
@@ -78,6 +82,8 @@ int main() {
 
 			/* If a Master Password is added or changed, write the new Master Password 
 			onto master_password.txt*/
+			file << master_password << endl;
+			file.close();
 
 			return 0; 
 		}
@@ -205,6 +211,12 @@ int main() {
 
 		else if (user_input == "PASSWORD") {
 			// Set up a master password 
+			cout << "Please enter the master password: ";
+			string input;
+			cin >> input;
+			master_password = input;
+			cout << "Master password has been entered " << endl;
+			bufferNoPrint(); buffer();
 
 		}
 		
