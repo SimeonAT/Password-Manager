@@ -76,7 +76,21 @@ int main() {
 
 		else if (user_input == "ADD") {
 			string name, username, passcode;
-			cout << "Enter password name: "; cin >> name;
+			bool same = true;
+
+			// A while loop to check if password name is the same as another password 
+			while (same == true) {
+				same = false;
+				cout << "Enter password name: "; cin >> name;
+
+				for (int i = 0; i < passwordLibrary.size(); i++) {
+					if (name == passwordLibrary[i].get_name())
+						same = true;
+				}
+				cout << "Another password of the same name has been found." << endl;
+				cout << "Please enter aother password name." << endl;
+			}
+
 			cout << "Enter username: "; cin >> username;
 			cout << "Enter password: "; cin >> passcode;
 
