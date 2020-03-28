@@ -36,16 +36,33 @@ int main() {
 	file.open("master_password.txt");
 	file >> line;
 	string master_password = line;
+	file.close(); // done reading 
 
 	if (master_password != "") {
+		int failed_tries = 0; // # of failed tries to enter master password 
 		while (true) {
 			cout << "Please enter the master password: ";
+			cout << "You only have " << 10 - failed_tries << " tries to enter it correctly" << endl;
+			cout << "before the whole password library is deleted. " << endl;
 			string input;
 			cin >> input;
+
 			if (input == master_password)
 				break;
 
+			if (failed_tries >= 10) {
+				// delete the whole password library, then break
+				file.open("passwords.txt", ios::out | ios::trunc);
+				file.close();
+
+				cout << "The whole password library has been deleted. " << endl;
+				bufferNoPrint(); buffer();
+				break;
+			}
+
+			failed_tries++;
 			cout << "\nPassword is incorrect \n\n";
+
 			bufferNoPrint(); buffer();
 			system("CLS");
 		}
