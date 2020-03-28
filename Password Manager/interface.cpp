@@ -84,11 +84,13 @@ int main() {
 				cout << "Enter password name: "; cin >> name;
 
 				for (int i = 0; i < passwordLibrary.size(); i++) {
-					if (name == passwordLibrary[i].get_name())
+					if (name == passwordLibrary[i].get_name()) {
 						same = true;
+						cout << "Another password of the same name has been found." << endl;
+						cout << "Please enter aother password name." << endl;
+						break;
+					}
 				}
-				cout << "Another password of the same name has been found." << endl;
-				cout << "Please enter aother password name." << endl;
 			}
 
 			cout << "Enter username: "; cin >> username;
