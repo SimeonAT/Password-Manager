@@ -132,7 +132,8 @@ int main() {
 				if (passwordName == passwordLibrary[i].get_name()) {
 					found = true;
 					pPassword = &passwordLibrary[i];
-					cout << *pPassword << endl;
+					cout << "\nHere is information about the password: \n\n";
+					cout << *pPassword << "\n\n";
 				}
 			}
 			
