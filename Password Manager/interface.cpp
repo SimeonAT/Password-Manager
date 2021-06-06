@@ -1,258 +1,280 @@
-#include "password_class.h"
-#include <Vector>
-#include <sstream>
+#include "password.h"
 #include <algorithm>
+#include <sstream>
+#include <vector>
 
 /*interface.cpp is the central hub of the program. Manages user interface,
    and all other external files are utilized here. */
 // FORMAT: <password name> <username> <password>
 
 int main() {
-	vector<Password> passwordLibrary; // holds passwords for duration of program 
-	fstream file;
+  vector<Password> passwordLibrary; // holds passwords for duration of program
+  fstream file;
 
-	/* Read master_password.txt. If there is a password in the file, ask the user to enter
-	the master password before emptying. After ten tries, CLEAR EVERYTHING IN passwords.txt*/
-	file.open("master_password.txt");
-	string line;
-	file >> line;
-	string master_password = line;
-	file.close(); // done reading 
+  /* Read master_password.txt. If there is a password in the file, ask the user
+  to enter the master password before emptying. After ten tries, CLEAR
+  EVERYTHING IN passwords.txt*/
+  file.open("master_password.txt");
+  string line;
+  file >> line;
+  string master_password = line;
+  file.close(); // done reading
 
-	if (master_password != "") {
-		int failed_tries = 0; // # of failed tries to enter master password 
-		while (true) {
-			cout << "Please enter the master password: ";
-			cout << "You only have " << 10 - failed_tries << " tries to enter it correctly" << endl;
-			cout << "before the whole password library is deleted. " << endl;
-			string input;
-			cin >> input;
+  if (master_password != "") {
+    int failed_tries = 0; // # of failed tries to enter master password
+    while (true) {
+      cout << "Please enter the master password: ";
+      cout << "You only have " << 10 - failed_tries
+           << " tries to enter it correctly" << endl;
+      cout << "before the whole password library is deleted. " << endl;
+      string input;
+      cin >> input;
 
-			if (input == master_password)
-				break;
+      if (input == master_password)
+        break;
 
-			if (failed_tries >= 9) {
-				// delete the whole password library, then break
-				file.open("passwords.txt", ios::out | ios::trunc);
-				file.close();
+      if (failed_tries >= 9) {
+        // delete the whole password library, then break
+        file.open("passwords.txt", ios::out | ios::trunc);
+        file.close();
 
-				cout << "\nThe whole password library has been deleted. " << endl;
-				bufferNoPrint(); buffer();
-				break;
-			}
+        cout << "\nThe whole password library has been deleted. " << endl;
+        bufferNoPrint();
+        buffer();
+        break;
+      }
 
-			failed_tries++;
-			cout << "\nPassword is incorrect \n\n";
+      failed_tries++;
+      cout << "\nPassword is incorrect \n\n";
 
-			bufferNoPrint(); buffer();
-			system("CLS");
-		}
-	}
-	system("CLS");
+      bufferNoPrint();
+      buffer();
+      system("CLS");
+    }
+  }
+  system("CLS");
 
+  /* - Read passwords from passwords.txt
+- Loop through each line
+- Use stringstream to separate the variables each line,
+   and add them to a new Password object */
+  file.open("passwords.txt");
 
-	/* - Read passwords from passwords.txt
-   - Loop through each line
-   - Use stringstream to separate the variables each line,
-	 and add them to a new Password object */
-	file.open("passwords.txt");
-	
-	string name, username, passcode;
-	if (!file) { cout << "ERROR: Can't Open File" << endl; return -1; } 
-	
-	while (getline(file, line)) {
-		/* If there are passwords in file, the while loop will execute */
-		stringstream splitter(line);
-		splitter >> name >> username >> passcode;
-		passwordLibrary.push_back(Password(passcode, name, username));
-	}
+  string name, username, passcode;
+  if (!file) {
+    cout << "ERROR: Can't Open File" << endl;
+    return -1;
+  }
 
-	file.close(); // done reading 
+  while (getline(file, line)) {
+    /* If there are passwords in file, the while loop will execute */
+    stringstream splitter(line);
+    splitter >> name >> username >> passcode;
+    passwordLibrary.push_back(Password(passcode, name, username));
+  }
 
-	/* THE INTERFACE LOOP */
-	while (true) {
-		cout << "Welcome to SimeonTG's Password Manager!" << endl;
-		cout << "Type ADD to add a password." << endl;
-		cout << "Type EDIT to edit a password." << endl;
-		cout << "Type CLEAR to clear your password library." << endl;
-		cout << "Type VIEW to view your password library." << endl;
-		cout << "Type PASSWORD to set up a master password for the password manager." << "\n\n" << endl;
-		cout << "Be sure to type EXIT before leaving in order " << endl;
-		cout << "to make sure that your passwords are saved." << endl;
-		cout << "---------------------------------------" << endl;
+  file.close(); // done reading
 
-		string user_input;
-		cin >> user_input;
-		// transform makes user_input all uppercase
-		transform(user_input.begin(), user_input.end(), user_input.begin(), ::toupper); 
-		cout << endl; // for formatting
+  /* THE INTERFACE LOOP */
+  while (true) {
+    cout << "Welcome to SimeonTG's Password Manager!" << endl;
+    cout << "Type ADD to add a password." << endl;
+    cout << "Type EDIT to edit a password." << endl;
+    cout << "Type CLEAR to clear your password library." << endl;
+    cout << "Type VIEW to view your password library." << endl;
+    cout
+        << "Type PASSWORD to set up a master password for the password manager."
+        << "\n\n"
+        << endl;
+    cout << "Be sure to type EXIT before leaving in order " << endl;
+    cout << "to make sure that your passwords are saved." << endl;
+    cout << "---------------------------------------" << endl;
 
-		if (user_input == "EXIT") { 
-			/* Before exiting, computer puts information of each password object 
-			onto each line of password.txt */
+    string user_input;
+    cin >> user_input;
+    // transform makes user_input all uppercase
+    transform(user_input.begin(), user_input.end(), user_input.begin(),
+              ::toupper);
+    cout << endl; // for formatting
 
-			// Clear passwords.txt if passwordLibrary is empty 
-			if (passwordLibrary.size() == 0) {
-				file.open("passwords.txt", ios::out | ios::trunc);
-				file.close();				
-				return 0;
-			}
+    if (user_input == "EXIT") {
+      /* Before exiting, computer puts information of each password object
+      onto each line of password.txt */
 
-			file.open("passwords.txt");
-			if (file.is_open()) {
-				for (int i = 0; i < passwordLibrary.size(); i++) {
-					string tempName = passwordLibrary[i].get_name();
-					string tempUserName = passwordLibrary[i].get_username();
-					string tempPassword = passwordLibrary[i].get_password();
+      // Clear passwords.txt if passwordLibrary is empty
+      if (passwordLibrary.size() == 0) {
+        file.open("passwords.txt", ios::out | ios::trunc);
+        file.close();
+        return 0;
+      }
 
-					file << tempName << " " << tempUserName << " " << tempPassword << endl;
-				}
-			}
-			file.close();
+      file.open("passwords.txt");
+      if (file.is_open()) {
+        for (unsigned int i = 0; i < passwordLibrary.size(); i++) {
+          string tempName = passwordLibrary[i].get_name();
+          string tempUserName = passwordLibrary[i].get_username();
+          string tempPassword = passwordLibrary[i].get_password();
 
-			/* If a Master Password is added or changed, write the new Master Password 
-			onto master_password.txt*/
-			file.open("master_password.txt", ios::out | ios::trunc);
-			file << master_password << endl;
-			file.close();
+          file << tempName << " " << tempUserName << " " << tempPassword
+               << endl;
+        }
+      }
+      file.close();
 
-			return 0; 
-		}
+      /* If a Master Password is added or changed, write the new Master Password
+      onto master_password.txt*/
+      file.open("master_password.txt", ios::out | ios::trunc);
+      file << master_password << endl;
+      file.close();
 
-		else if (user_input == "ADD") {
-			string name, username, passcode;
-			bool same = true;
+      return 0;
+    }
 
-			// A while loop to check if password name is the same as another password 
-			while (same == true) {
-				same = false;
-				cout << "Enter password name: "; cin >> name;
+    else if (user_input == "ADD") {
+      string name, username, passcode;
+      bool same = true;
 
-				for (int i = 0; i < passwordLibrary.size(); i++) {
-					if (name == passwordLibrary[i].get_name()) {
-						same = true;
-						cout << "Another password of the same name has been found." << endl;
-						cout << "Please enter aother password name." << endl;
-						break;
-					}
-				}
-			}
+      // A while loop to check if password name is the same as another password
+      while (same == true) {
+        same = false;
+        cout << "Enter password name: ";
+        cin >> name;
 
-			cout << "Enter username: "; cin >> username;
-			cout << "Enter password: "; cin >> passcode;
+        for (unsigned int i = 0; i < passwordLibrary.size(); i++) {
+          if (name == passwordLibrary[i].get_name()) {
+            same = true;
+            cout << "Another password of the same name has been found." << endl;
+            cout << "Please enter aother password name." << endl;
+            break;
+          }
+        }
+      }
 
-			// Append a new Password object into passwordLibrary 
-			passwordLibrary.push_back(Password(passcode, name, username));
-			bufferNoPrint();
-			buffer();
-		}
+      cout << "Enter username: ";
+      cin >> username;
+      cout << "Enter password: ";
+      cin >> passcode;
 
-		else if (user_input == "VIEW") {
-			cout << "The size of your password library is " << passwordLibrary.size() << ". \n\n";
-			// Display password library using iterators 
-			vector<Password>::iterator it;
-			for (it = passwordLibrary.begin(); it != passwordLibrary.end(); it++) {
-				cout << *it << endl;
-			}
-			bufferNoPrint();
-			buffer();
-		}
+      // Append a new Password object into passwordLibrary
+      passwordLibrary.push_back(Password(passcode, name, username));
+      bufferNoPrint();
+      buffer();
+    }
 
-		else if (user_input == "CLEAR") {
-			cout << "Are you sure you want to CLEAR your password library? This can't be undone. " << endl;
-			cout << "Type YES or NO." << endl;
-			
-			string user_input;
-			cin >> user_input;
-			transform(user_input.begin(), user_input.end(), user_input.begin(), ::toupper);
+    else if (user_input == "VIEW") {
+      cout << "The size of your password library is " << passwordLibrary.size()
+           << ". \n\n";
+      // Display password library using iterators
+      vector<Password>::iterator it;
+      for (it = passwordLibrary.begin(); it != passwordLibrary.end(); it++) {
+        cout << *it << endl;
+      }
+      bufferNoPrint();
+      buffer();
+    }
 
-			if (user_input == "YES") {
-				passwordLibrary.clear();
-				cout << "Your password library has been deleted. " << endl;
-				bufferNoPrint();
-			}
-			else if (user_input == "NO") {
-				cout << "Your password library has not been deleted. " << endl;
-				bufferNoPrint();
-			}
-			else {
-				cout << "ERROR: invalid input. " << endl;
-			}
-			buffer();
-		}
+    else if (user_input == "CLEAR") {
+      cout << "Are you sure you want to CLEAR your password library? This "
+              "can't be undone. "
+           << endl;
+      cout << "Type YES or NO." << endl;
 
-		else if (user_input == "EDIT") {
-			cout << "Type the name of the password that you want to edit. \n\n";
-			string passwordName; 
-			cin >> passwordName;
+      string user_input;
+      cin >> user_input;
+      transform(user_input.begin(), user_input.end(), user_input.begin(),
+                ::toupper);
 
-			// Find password_name in passwordLibrary
-			bool found = false;
-			Password *pPassword = NULL; // Holds the address of the password we want to change 
-			for (int i = 0; i < passwordLibrary.size(); i++) {
-				if (passwordName == passwordLibrary[i].get_name()) {
-					found = true;
-					pPassword = &passwordLibrary[i];
-					cout << "\nHere is information about the password: \n\n";
-					cout << *pPassword << "\n\n";
-				}
-			}
-			
-			if (found == true){
-				cout << "What do you want to change?" << endl;
-				cout << "Enter NAME to change the name of the password. " << endl;
-				cout << "Enter USERNAME to change the username of the password." << endl;
-				cout << "Enter PASSWORD to change the actual password itself. \n\n";
-				string whatToChange;
-				cin >> whatToChange;
-				transform(whatToChange.begin(), whatToChange.end(), whatToChange.begin(), ::toupper);
+      if (user_input == "YES") {
+        passwordLibrary.clear();
+        cout << "Your password library has been deleted. " << endl;
+        bufferNoPrint();
+      } else if (user_input == "NO") {
+        cout << "Your password library has not been deleted. " << endl;
+        bufferNoPrint();
+      } else {
+        cout << "ERROR: invalid input. " << endl;
+      }
+      buffer();
+    }
 
-				if (whatToChange == "NAME") {
-					cout << "Please enter the new NAME for the password: ";
-					string changeName;
-					cin >> changeName;
-					pPassword->set_name(changeName);
+    else if (user_input == "EDIT") {
+      cout << "Type the name of the password that you want to edit. \n\n";
+      string passwordName;
+      cin >> passwordName;
 
-				}
-				else if (whatToChange == "USERNAME") {
-					cout << "Please enter the new USERNAME for the password: ";
-					string changeUserName;
-					cin >> changeUserName;
-					pPassword->set_username(changeUserName);
+      // Find password_name in passwordLibrary
+      bool found = false;
+      Password *pPassword =
+          NULL; // Holds the address of the password we want to change
+      for (unsigned int i = 0; i < passwordLibrary.size(); i++) {
+        if (passwordName == passwordLibrary[i].get_name()) {
+          found = true;
+          pPassword = &passwordLibrary[i];
+          cout << "\nHere is information about the password: \n\n";
+          cout << *pPassword << "\n\n";
+        }
+      }
 
-				}
-				else if (whatToChange == "PASSWORD") {
-					cout << "Please enter the new PASSWORD: ";
-					string changePassword;
-					cin >> changePassword;
-					pPassword->set_password(changePassword);
-				}
-				else {
-					cout << "Sorry. I didn't understand the input you typed. " << endl;
-				}
+      if (found == true) {
+        cout << "What do you want to change?" << endl;
+        cout << "Enter NAME to change the name of the password. " << endl;
+        cout << "Enter USERNAME to change the username of the password."
+             << endl;
+        cout << "Enter PASSWORD to change the actual password itself. \n\n";
+        string whatToChange;
+        cin >> whatToChange;
+        transform(whatToChange.begin(), whatToChange.end(),
+                  whatToChange.begin(), ::toupper);
 
-			}
-			else {
-				cout << "Sorry.\n A password with that password name cannot be found." << endl;
-			}
-			pPassword = NULL;
-			delete pPassword;
-			bufferNoPrint(); buffer();
-		}
+        if (whatToChange == "NAME") {
+          cout << "Please enter the new NAME for the password: ";
+          string changeName;
+          cin >> changeName;
+          pPassword->set_name(changeName);
 
-		else if (user_input == "PASSWORD") {
-			// Set up a master password 
-			cout << "Please enter the master password: ";
-			string input;
-			cin >> input;
-			master_password = input;
-			cout << "Master password has been entered " << endl;
-			bufferNoPrint(); buffer();
+        } else if (whatToChange == "USERNAME") {
+          cout << "Please enter the new USERNAME for the password: ";
+          string changeUserName;
+          cin >> changeUserName;
+          pPassword->set_username(changeUserName);
 
-		}
-		
-		else { cout << "Please enter valid input." << endl; bufferNoPrint(); buffer(); }
+        } else if (whatToChange == "PASSWORD") {
+          cout << "Please enter the new PASSWORD: ";
+          string changePassword;
+          cin >> changePassword;
+          pPassword->set_password(changePassword);
+        } else {
+          cout << "Sorry. I didn't understand the input you typed. " << endl;
+        }
 
-		system("CLS");
-	}
+      } else {
+        cout << "Sorry.\n A password with that password name cannot be found."
+             << endl;
+      }
+      pPassword = NULL;
+      delete pPassword;
+      bufferNoPrint();
+      buffer();
+    }
+
+    else if (user_input == "PASSWORD") {
+      // Set up a master password
+      cout << "Please enter the master password: ";
+      string input;
+      cin >> input;
+      master_password = input;
+      cout << "Master password has been entered " << endl;
+      bufferNoPrint();
+      buffer();
+
+    }
+
+    else {
+      cout << "Please enter valid input." << endl;
+      bufferNoPrint();
+      buffer();
+    }
+
+    system("CLS");
+  }
 }
