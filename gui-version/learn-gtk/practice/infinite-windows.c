@@ -17,8 +17,8 @@
 /* Creates a new window with a button that opens another window
  * when clicked.
  */
-void another_window(GtkWidget *unused, gpointer user_input) {
-	GtkApplication *current_application = (GtkApplication *) user_input;
+void another_window(GtkWidget *unused, gpointer auxillary) {
+	GtkApplication *current_application = (GtkApplication *) auxillary;
 
 	GtkWidget *new_window = gtk_application_window_new(current_application);
 	gtk_window_set_title(GTK_WINDOW(new_window), 
