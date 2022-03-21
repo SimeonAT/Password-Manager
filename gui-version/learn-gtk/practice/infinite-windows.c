@@ -14,14 +14,15 @@
 
 #define MESSAGE "Click me to open another window.\n"
 
-/* Opens a new window with a button that opens another window
+/* Creates a new window with a button that opens another window
  * when clicked.
  */
 void another_window(GtkWidget *unused, gpointer user_input) {
 	GtkApplication *current_application = (GtkApplication *) user_input;
 
 	GtkWidget *new_window = gtk_application_window_new(current_application);
-	gtk_window_set_title(GTK_WINDOW(new_window), "Another Window");
+	gtk_window_set_title(GTK_WINDOW(new_window), 
+						 "My First GTK Application");
 	gtk_window_set_default_size(GTK_WINDOW(new_window), WIDTH, HEIGHT);
 
 	GtkWidget *button_new_window = gtk_button_new_with_label(MESSAGE);
@@ -37,16 +38,7 @@ void another_window(GtkWidget *unused, gpointer user_input) {
  * a new window when clicked.
  */
 void activate(GtkApplication *application, gpointer user_input) {
-	GtkWidget *window = gtk_application_window_new(application);
-	gtk_window_set_title(GTK_WINDOW(window), "My First GTK Application");
-	gtk_window_set_default_size(GTK_WINDOW(window), WIDTH, HEIGHT);
-
-	GtkWidget *button = gtk_button_new_with_label(MESSAGE);
-	g_signal_connect(button, "clicked", G_CALLBACK(another_window), 
-					 application);
-	gtk_window_set_child(GTK_WINDOW(window), button);
-	
-	gtk_window_present(GTK_WINDOW(window));
+	another_window(NULL, application);
 	return;
 }
 
