@@ -50,6 +50,7 @@ int main(int argc, char **argv) {
 	g_signal_connect(running_app, "activate", G_CALLBACK(activate), NULL);
 
 	status = g_application_run(G_APPLICATION(running_app), argc, argv);
+	g_object_unref(running_app);
 	return status;
 }
 

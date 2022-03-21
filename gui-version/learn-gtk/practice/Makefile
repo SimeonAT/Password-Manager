@@ -8,3 +8,6 @@ create: $(FILENAME).c
 
 clean:
 	rm -f $(FILENAME)
+
+valgrind:
+	G_DEBUG=resident-modules valgrind --tool=memcheck --leak-check=full --leak-resolution=high --num-callers=20 --log-file=vgdump ./infinite-windows
