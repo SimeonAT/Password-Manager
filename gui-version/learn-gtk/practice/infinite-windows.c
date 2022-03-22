@@ -46,9 +46,6 @@ void another_window(GtkWidget *unused, gpointer auxillary) {
 					 current_application);
 	gtk_window_set_child(GTK_WINDOW(new_window), button_new_window);
 
-	g_signal_connect(new_window, "close_request", G_CALLBACK(another_window), 
-					 current_application);
-
 	gtk_window_present(GTK_WINDOW(new_window));
 	return;
 }

@@ -1,4 +1,4 @@
-FILENAME = infinite-windows
+FILENAME = hello-there
 
 all:
 	make create
