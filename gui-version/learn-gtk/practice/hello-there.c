@@ -26,9 +26,7 @@
 /* Responds to the "Hello There" sentence with
  * "General Kenobi, you are a bold one!".
  */
-void response_window(GtkWidget *unused, gpointer app_pointer) {
-	GtkApplication *current_app = (GtkApplication *) app_pointer;
-
+void response_window(GtkApplication *current_app, gpointer app_pointer) {
 	GtkWidget *new_window = gtk_application_window_new(current_app);
 	gtk_window_set_title(GTK_WINDOW(new_window), RESPONSE_TITLE);
 	gtk_window_set_default_size(GTK_WINDOW(new_window), WIDTH, HEIGHT);
@@ -54,8 +52,9 @@ void main_window(GtkApplication *current_application,
 	gtk_label_set_markup(GTK_LABEL(message_label), MESSAGE_LABEL);
 
 	GtkWidget *button_new_window = gtk_button_new();
-	g_signal_connect(button_new_window, "clicked", G_CALLBACK(response_window), 
-					 current_application);
+	g_signal_connect_swapped(button_new_window, "clicked", 
+							 G_CALLBACK(response_window), 
+					 	 	 current_application);
 
 	gtk_window_set_child(GTK_WINDOW(new_window), button_new_window);
 	gtk_button_set_child(GTK_BUTTON(button_new_window), message_label);
