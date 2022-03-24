@@ -33,8 +33,8 @@ gboolean close_request(GtkWindow *window_to_close, gpointer user_data) {
 /* Creates a new window with a button that opens another window
  * when clicked.
  */
-void another_window(GtkWidget *unused, gpointer auxillary) {
-	GtkApplication *current_application = (GtkApplication *) auxillary;
+void another_window(GtkApplication *current_application, 
+					gpointer auxillary) {
 
 	GtkWidget *new_window = gtk_application_window_new(current_application);
 	gtk_window_set_title(GTK_WINDOW(new_window), 
@@ -42,9 +42,10 @@ void another_window(GtkWidget *unused, gpointer auxillary) {
 	gtk_window_set_default_size(GTK_WINDOW(new_window), WIDTH, HEIGHT);
 
 	GtkWidget *button_new_window = gtk_button_new_with_label(MESSAGE);
-	g_signal_connect(button_new_window, "clicked", G_CALLBACK(another_window), 
-					 current_application);
 	gtk_window_set_child(GTK_WINDOW(new_window), button_new_window);
+
+	g_signal_connect_swapped(button_new_window, "clicked", 
+							 G_CALLBACK(another_window), current_application);
 
 	gtk_window_present(GTK_WINDOW(new_window));
 	return;
@@ -54,7 +55,7 @@ void another_window(GtkWidget *unused, gpointer auxillary) {
  * a new window when clicked.
  */
 void activate(GtkApplication *application, gpointer user_input) {
-	another_window(NULL, application);
+	another_window(application, NULL);
 	return;
 }
 
