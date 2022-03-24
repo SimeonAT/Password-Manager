@@ -16,6 +16,8 @@
  *
  * https://docs.gtk.org/gtk4/class.Window.html#:~:text=A%20GtkWindow%20is%20a
  * %20toplevel,%2C%20close%20it%2C%E2%80%A6).
+ *
+ * https://docs.gtk.org/gobject/func.signal_connect_swapped.html
  * 
  * */
 
